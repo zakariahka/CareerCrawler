@@ -11,11 +11,11 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gray-100">
+    <div className="flex items-center justify-center min-h-screen bg-light-pink-orange">
       <div className="p-14 bg-white rounded-lg shadow-xl space-y-6 max-w-2xl w-full mx-4">
         <label
           htmlFor="email"
-          className="block text-sm font-semibold text-gray-700"
+          className="block text-sm font-semibold text-words-pink-orange"
         >
           Enter your email
         </label>
@@ -23,13 +23,13 @@ export default function LoginPage() {
           id="email"
           type="email"
           placeholder="Your Email"
-          className="border-2 border-gray-300 bg-gray-50 h-10 px-5 rounded-lg text-sm focus:outline-none w-full placeholder-gray-500"
+          className="border-2 border-light-pink-orange bg-gray-50 h-10 px-5 rounded-lg text-sm focus:outline-none w-full placeholder-gray-500"
           onChange={(event) => setEmail(event.target.value)}
           value={email}
         />
         <label
           htmlFor="password"
-          className="block text-sm font-semibold text-gray-700"
+          className="block text-sm font-semibold text-words-pink-orange"
         >
           Enter your password
         </label>
@@ -37,30 +37,29 @@ export default function LoginPage() {
           id="password"
           type="password"
           placeholder="Your Password"
-          className="border-2 border-gray-300 bg-gray-50 h-10 px-5 rounded-lg text-sm focus:outline-none w-full placeholder-gray-500"
+          className="border-2 border-light-pink-orange bg-gray-50 h-10 px-5 rounded-lg text-sm focus:outline-none w-full placeholder-gray-500"
           onChange={(event) => setPassword(event.target.value)}
           value={password}
         />
         <div className="text-right">
           <label className="text-blue-500 hover:text-blue-700">
+          <Link to="/forgotpassword" className="text-blue-500 hover:text-blue-700">
             Forgot password?
+            </Link>
           </label>
         </div>
         <button
           type="submit"
-          className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg w-full"
+          className="bg-pink-orange hover:bg-dark-pink-orange text-white font-bold py-2 px-4 rounded-lg w-full"
           onClick={onHandleSubmit}
         >
           Log In
         </button>
         <div className="text-center text-gray-500">
           Don't have an account yet?{" "}
-          <Link to="signup" className="text-blue-500 hover:text-blue-700">
-            Sign in here
+          <Link to="/signup" className="text-blue-500 hover:text-blue-700">
+            Sign up here
           </Link>
-        </div>
-        <div className="text-center">
-          {email} {password}
         </div>
       </div>
     </div>
