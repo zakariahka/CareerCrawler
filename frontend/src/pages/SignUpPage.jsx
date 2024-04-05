@@ -101,10 +101,11 @@ export default function RegisterPage() {
           id="confirmedPassword"
           type="password"
           placeholder="confirm password"
-          className={`border-2 ${!passwordsMatch && user.confirmedPassword.length > 0 ? "border-red-500" : "border-light-pink-orange"} bg-gray-50 h-10 px-5 rounded-lg text-sm focus:outline-none w-full placeholder-gray-500`}
+          className={`border-2 ${!passwordsMatch && user.confirmedPassword.length > 0 ? "border-red-700" : "border-light-pink-orange"} bg-gray-50 h-10 px-5 rounded-lg text-sm focus:outline-none w-full placeholder-gray-500`}
           value={user.confirmedPassword}
           onChange={onHandleChange}
         />
+        {(!passwordsMatch && user.confirmedPassword.length > 0) && <p className="text-red-700">Passwords must match</p>}
         <button
           type="submit"
           className="bg-pink-orange hover:bg-dark-pink-orange text-white font-bold py-2 px-4 rounded-lg w-full"
