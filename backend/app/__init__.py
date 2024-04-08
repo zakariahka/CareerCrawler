@@ -1,19 +1,20 @@
-from flask import Flask, current_app
+from flask import Flask
 from pymongo import MongoClient
+import pymongo
 from config import Config
+from flask_jwt_extended import JWTManager
+from .routes.user_routes import user_bp
 
 def create_app():
     app = Flask(__name__)
+
     app.config.from_object(Config)
-
     client = MongoClient(app.config['MONGO_URI'])
-    app.db = client.twiscord
-    app.users = app.db.users
+    db = client.twiscord
+    app.db = db
+    app.db.users.create_index([("email", pymongo.ASCENDING)], unique=True)
 
-
-    with app.app_context():
-        current_app.db = app.db
-        
-    from .routes.user_routes import user_bp
+    jwt = JWTManager(app)
     app.register_blueprint(user_bp)
+
     return app
