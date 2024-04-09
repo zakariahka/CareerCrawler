@@ -4,9 +4,11 @@ import pymongo
 from config import Config
 from flask_jwt_extended import JWTManager
 from .routes.user_routes import user_bp
+from flask_cors import CORS
 
 def create_app():
     app = Flask(__name__)
+    CORS(app)
 
     app.config.from_object(Config)
     client = MongoClient(app.config['MONGO_URI'])

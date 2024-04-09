@@ -1,12 +1,14 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import { Link } from "react-router-dom";
+import { UserContext } from "../context/userContext";
 
 export default function RegisterPage() {
+  const { signup } = useContext(UserContext)
+
   const [user, setUser] = useState({
     email: "",
     password: "",
-    firstName: "",
-    lastName: "",
+    userName: "",
     phoneNumber: "",
     confirmedPassword: "",
   });
@@ -24,45 +26,49 @@ export default function RegisterPage() {
     }));
   }
 
-  function onHandleSubmit(e) {
+  async function onHandleSubmit(e) {
+    console.log('hit submite')
     e.preventDefault();
-    setUser({
-      email: "",
-      password: "",
-      firstName: "",
-      lastName: "",
-      phoneNumber: "",
-      confirmedPassword: "",
-    });
+    if (passwordsMatch && user.password === user.confirmedPassword) {
+      const { confirmedPassword, ...userData } = user;
+  
+      try {
+        const data = await signup(userData);
+        console.log("Signup Success:", data);
+        setUser({
+          email: "",
+          password: "",
+          userName: "",
+          phoneNumber: "",
+          confirmedPassword: "",
+        });
+  
+      } catch (error) {
+        console.error("Signup Error:", error);
+      }
+    } else {
+      console.error("Passwords do not match.");
+    }
   }
+  
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-light-pink-orange">
       <div className="p-14 bg-white rounded-lg shadow-xl space-y-6 max-w-2xl w-full mx-4">
-        <label
-          htmlFor="password"
+      <label
+          htmlFor="userName"
           className="block text-sm font-semibold text-words-pink-orange"
         >
-          Enter Your first and last Name
+          Enter your user name
         </label>
-        <div className="flex space-x-4">
-          <input
-            id="firstName"
-            type="text"
-            placeholder="first name"
-            className="border-2 border-light-pink-orange bg-gray-50 h-10 px-5 rounded-lg text-sm focus:outline-none w-full placeholder-gray-500"
-            value={user.firstName}
-            onChange={onHandleChange}
-          />
-          <input
-            id="lastName"
-            type="text"
-            placeholder="last name"
-            className="border-2 border-light-pink-orange bg-gray-50 h-10 px-5 rounded-lg text-sm focus:outline-none w-full placeholder-gray-500"
-            value={user.lastName}
-            onChange={onHandleChange}
-          />
-        </div>
+        <input
+          id="userName"
+          type="text"
+          placeholder="Enter your user name"
+          className="border-2 border-light-pink-orange bg-gray-50 h-10 px-5 rounded-lg text-sm focus:outline-none w-full placeholder-gray-500"
+          value={user.userName}
+          onChange={onHandleChange}
+        />
         <label
           htmlFor="email"
           className="block text-sm font-semibold text-words-pink-orange"
@@ -75,6 +81,20 @@ export default function RegisterPage() {
           placeholder="example@mail.com"
           className="border-2 border-light-pink-orange bg-gray-50 h-10 px-5 rounded-lg text-sm focus:outline-none w-full placeholder-gray-500"
           value={user.email}
+          onChange={onHandleChange}
+        />
+        <label
+          htmlFor="email"
+          className="block text-sm font-semibold text-words-pink-orange"
+        >
+          Enter your phone number
+        </label>
+        <input
+          id="phoneNumber"
+          type="tel"
+          placeholder="Your phone number"
+          className="border-2 border-light-pink-orange bg-gray-50 h-10 px-5 rounded-lg text-sm focus:outline-none w-full placeholder-gray-500"
+          value={user.phoneNumber}
           onChange={onHandleChange}
         />
         <label
