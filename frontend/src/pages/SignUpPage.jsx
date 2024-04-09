@@ -1,9 +1,10 @@
 import { useState, useEffect, useContext } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { UserContext } from "../context/userContext";
 
 export default function RegisterPage() {
   const { signup } = useContext(UserContext)
+  const navigate = useNavigate()
 
   const [user, setUser] = useState({
     email: "",
@@ -35,6 +36,9 @@ export default function RegisterPage() {
       try {
         const data = await signup(userData);
         console.log("Signup Success:", data);
+        if(data.status === 200){
+          navigate("/login")
+        }
         setUser({
           email: "",
           password: "",
@@ -42,7 +46,6 @@ export default function RegisterPage() {
           phoneNumber: "",
           confirmedPassword: "",
         });
-  
       } catch (error) {
         console.error("Signup Error:", error);
       }
