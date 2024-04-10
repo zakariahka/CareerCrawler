@@ -9,7 +9,7 @@ import { UserContext, UserProvider } from "./context/userContext";
 
 const ProtectedRoute = () => {
   const { isLoggedIn } = useContext(UserContext);
-  return isLoggedIn() ? <Outlet /> : <Navigate to="/login" replace />;
+  return isLoggedIn ? <Outlet /> : <Navigate to="/login" replace />;
 };
 
 const router = createBrowserRouter([
@@ -30,11 +30,11 @@ const router = createBrowserRouter([
         element: <ForgotPasswordPage />,
       },
       {
-        path: "/", 
+        path: "/main", 
         element: <ProtectedRoute />,
         children: [
           {
-            path: "main",
+            index: true,
             element: <MainPage />,
           },
         ],

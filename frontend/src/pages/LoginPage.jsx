@@ -1,13 +1,14 @@
-import { useState } from "react";
+import { useState, useContext } from "react";
 import { Link } from "react-router-dom";
+import { UserContext } from "../context/userContext";
 
 export default function LoginPage() {
+  const { login } = useContext(UserContext)
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  function onHandleSubmit() {
-    setEmail("");
-    setPassword("");
+  const onHandleSubmit = async() => {
+    await login(email, password)
   }
 
   return (

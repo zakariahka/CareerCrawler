@@ -1,7 +1,7 @@
 from flask import Blueprint, jsonify, request, current_app
 from email_validator import validate_email, EmailNotValidError
 from flask_jwt_extended import create_access_token
-from werkzeug.security import generate_password_hash
+from werkzeug.security import generate_password_hash, check_password_hash
 
 user_bp = Blueprint('user_bp', __name__)
 
@@ -54,7 +54,7 @@ def login():
         return jsonify({'error': 'Request body must be in JSON'}), 400
 
     email = data.get("email")
-    password = data.get('passwords')
+    password = data.get('password')
 
     if email is None or password is None:
         return jsonify({'error': 'Email or password is missing'}), 400
@@ -62,5 +62,11 @@ def login():
     user = current_app.db.users.find_one({'email': email})
     if not user:
         return jsonify({'error': 'A user with that email doesnt exist'}), 400
+    
+    if not check_password_hash(user['password'], password):
+        return jsonify({'error': 'Invalid password'}), 400
+    
+    access_token = create_access_token(identity=str(user['_id']))
+    return jsonify({'user': user, 'token': access_token}), 200
     
     

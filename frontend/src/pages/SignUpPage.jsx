@@ -35,9 +35,12 @@ export default function RegisterPage() {
   
       try {
         const data = await signup(userData);
-        console.log("Signup Success:", data);
         if(data.status === 200){
           navigate("/login")
+          console.log(data)
+        }
+        else{
+          console.log("Signup failed:", data);
         }
         setUser({
           email: "",
