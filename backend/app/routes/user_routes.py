@@ -11,7 +11,6 @@ def index():
     users = list(current_app.db.users.find({}, {'_id': 0}))
     return jsonify(users)
 
-
 @user_bp.route('/signup', methods=['POST'])
 def signup():
     data = request.get_json()
@@ -44,9 +43,6 @@ def signup():
     access_token = create_access_token(identity=str(inserted_user.inserted_id))
     return jsonify({"user": user, "token": access_token}), 200
 
-
-
-
 @user_bp.route('/login', methods=['POST'])
 def login():
     data = request.get_json()
@@ -68,5 +64,17 @@ def login():
     
     access_token = create_access_token(identity=str(user['_id']))
     return jsonify({'user': user, 'token': access_token}), 200
+
+@user_bp.route('/get_user')
+def get_user():
+    email = request.args.get('email')
+    user = current_app.db.users.find_one({'email': email})
+
+    if not user:
+        return jsonify({'error': 'User doesnt exist'}), 400
     
+    user['_id'] = str(user['_id'])
+    return jsonify(user)
     
+
+

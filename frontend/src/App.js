@@ -1,4 +1,4 @@
-import {useContext} from 'react';
+import { useContext } from 'react';
 import { createBrowserRouter, RouterProvider, Navigate, Outlet } from "react-router-dom";
 import Root from "./pages/Root";
 import LoginPage from "./pages/LoginPage";
@@ -8,8 +8,8 @@ import MainPage from "./pages/MainPage";
 import { UserContext, UserProvider } from "./context/userContext";
 
 const ProtectedRoute = () => {
-  const { isLoggedIn } = useContext(UserContext);
-  return isLoggedIn ? <Outlet /> : <Navigate to="/login" replace />;
+  const { userToken } = useContext(UserContext);
+  return userToken ? <Outlet /> : <Navigate to="/login" replace />;
 };
 
 const router = createBrowserRouter([
@@ -30,7 +30,7 @@ const router = createBrowserRouter([
         element: <ForgotPasswordPage />,
       },
       {
-        path: "/main", 
+        path: "main", 
         element: <ProtectedRoute />,
         children: [
           {
@@ -41,7 +41,7 @@ const router = createBrowserRouter([
       },
       {
         index: true,
-        element: <Navigate to="/main" replace />,
+        element: <Navigate to="main" replace />,
       },
     ],
   },
