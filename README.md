@@ -49,6 +49,6 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 - [BeautifulSoup](https://www.crummy.com/software/BeautifulSoup/) for web scraping.
 - [React](https://reactjs.org/) for building the user interface.
-- [Flask](https://flask.palletsprojects.com/) or [Express](https://expressjs.com/) for the backend framework.
-- [MongoDB](https://www.mongodb.com/) or [PostgreSQL](https://www.postgresql.org/) for the database solution.
-- [Twilio](https://www.twilio.com/) or [SendGrid](https://sendgrid.com/) for the notification service.
+- [Flask](https://flask.palletsprojects.com/) for the backend framework.
+- [MongoDB](https://www.mongodb.com/) for the database solution.
+- [Twilio](https://www.twilio.com/) for the notification service.
