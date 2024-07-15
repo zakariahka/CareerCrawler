@@ -13,34 +13,41 @@ export const UserProvider = ({ children }) => {
   const [isLoading, setIsLoading] = useState(false);
 
   const signup = async (userData) => {
-    const url = "http://127.0.0.1:5000/signup";
     try {
-      const response = await axios.post(url, userData);
-      return response;
+      const response = await axios.post('http://127.0.0.1:5000/user/signup', userData, {
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        withCredentials: true
+      });
+      return response.data;
     } catch (error) {
-      console.error("Signup Error:", error.response.data);
-      return error.response.data;
+      console.error('Signup Error:', error);
+      throw error;
     }
   };
-
+  
   const login = async (email, password) => {
-    const url = "http://127.0.0.1:5000/login";
-    setIsLoading(true);
+    const url = 'http://127.0.0.1:5000/user/login';
     try {
-      const response = await axios.post(url, { email, password });
+      const response = await axios.post(url, { email, password }, {
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        withCredentials: true
+      });
       if (response.status === 200 && response.data.token) {
         setUserData(response.data.user);
         setUserToken(response.data.token);
-        localStorage.setItem("userData", JSON.stringify(response.data.user));
-        localStorage.setItem("userToken", response.data.token);
-        console.log("login success:", response.data);
-        return response;
+        localStorage.setItem('userData', JSON.stringify(response.data.user));
+        localStorage.setItem('userToken', response.data.token);
+        console.log('login success:', response.data);
+        return response.data;
       }
     } catch (error) {
-      console.error("login Error:", error.response.data);
-      return error.response.data;
+      console.error('login Error:', error.response.data);
+      throw error;
     }
-    setIsLoading(false);
   };
 
   return (

@@ -28,7 +28,7 @@ export default function RegisterPage() {
   }
 
   async function onHandleSubmit(e) {
-    console.log('hit submite')
+    console.log('hit submit')
     e.preventDefault();
     if (passwordsMatch && user.password === user.confirmedPassword) {
       const { confirmedPassword, ...userData } = user;
