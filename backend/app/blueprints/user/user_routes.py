@@ -59,7 +59,7 @@ def login():
         return jsonify({'error': 'A user with that email doesn\'t exist', 'status': 402})
     
     if not check_password_hash(user['password'], password):
-        return jsonify({'error': 'Invalid password'}), 403
+        return jsonify({'error': 'Invalid password', 'status': 402})
     
     access_token = create_access_token(identity=str(user['_id']))
     return jsonify({'user': user, 'token': access_token, 'status': 200})
