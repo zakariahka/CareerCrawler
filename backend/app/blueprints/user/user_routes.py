@@ -73,4 +73,4 @@ def get_user():
         return jsonify({'error': 'User doesnt exist', 'status': 400})
     
     user['_id'] = str(user['_id'])
-    return jsonify(user)
+    return jsonify({'user': user, 'status': 200})
