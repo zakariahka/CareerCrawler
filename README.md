@@ -1,4 +1,4 @@
-## The app is still in development !!
+## This app is still in development !!
 Hopefully will be finished soon :)
 
 # Job Listings Aggregator Bot
