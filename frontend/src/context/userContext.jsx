@@ -4,21 +4,21 @@ import axios from "axios";
 export const UserContext = createContext();
 
 export const UserProvider = ({ children }) => {
-  const [userToken, setUserToken] = useState(localStorage.getItem("userToken"));
-  const [userData, setUserData] = useState(
-    localStorage.getItem("userData")
-      ? JSON.parse(localStorage.getItem("userData"))
-      : null
-  );
+  const [userData, setUserData] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
+  const API_URL = process.env.REACT_APP_API_URL;
+
+  const axiosInstance = axios.create({
+    baseURL: API_URL,
+    withCredentials: true, 
+  });
 
   const signup = async (userData) => {
     try {
-      const response = await axios.post('http://127.0.0.1:5000/user/signup', userData, {
+      const response = await axiosInstance.post('/user/signup', userData, {
         headers: {
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
         },
-        withCredentials: true
       });
       return response.data;
     } catch (error) {
@@ -26,33 +26,28 @@ export const UserProvider = ({ children }) => {
       throw error;
     }
   };
-  
+
   const login = async (email, password) => {
-    const url = 'http://127.0.0.1:5000/user/login';
     try {
-      const response = await axios.post(url, { email, password }, {
+      const response = await axiosInstance.post('/user/login', { email, password }, {
         headers: {
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
         },
-        withCredentials: true
       });
-      if (response.status === 200 && response.data.token) {
+      if (response.status === 200) {
         setUserData(response.data.user);
-        setUserToken(response.data.token);
-        localStorage.setItem('userData', JSON.stringify(response.data.user));
-        localStorage.setItem('userToken', response.data.token);
-        console.log('login success:', response.data);
+        console.log('Login successful:', response.data);
         return response.data;
       }
     } catch (error) {
-      console.error('login Error:', error.response.data);
+      console.error('Login Error:', error.response ? error.response.data : error.message);
       throw error;
     }
   };
 
   return (
     <UserContext.Provider
-      value={{ signup, login, isLoading, userData, userToken }}
+      value={{ signup, login, isLoading, userData }}
     >
       {children}
     </UserContext.Provider>
