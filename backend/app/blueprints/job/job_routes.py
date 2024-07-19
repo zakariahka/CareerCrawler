@@ -31,3 +31,13 @@ def create_job():
     job['_id'] = str(result.inserted_id) 
 
     return jsonify(job), 201
+
+@job_bp.route('/jobs/<job_id>', methods=['GET'])
+@jwt_required()
+def get_job(job_id):
+    job = current_app.db.jobs.find_one({'_id': ObjectId(job_id)})
+    if not job:
+        return jsonify({'error': 'Job not found'}), 404
+
+    job['_id'] = str(job['_id'])
+    return jsonify(job)
