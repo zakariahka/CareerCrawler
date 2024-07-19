@@ -12,3 +12,22 @@ def get_jobs():
         job['_id'] = str(job['_id'])
     return jsonify(jobs)
 
+@job_bp.route('/jobs', methods=['POST'])
+@jwt_required()
+def create_job():
+    data = request.get_json()
+    if not data:
+        return jsonify({'error': 'Request body must be JSON'}), 400
+
+    job = {
+        'title': data.get('title'),
+        'company': data.get('company'),
+        'location': data.get('location'),
+        'description': data.get('description'),
+        'link': data.get('link')
+    }
+
+    result = current_app.db.jobs.insert_one(job)
+    job['_id'] = str(result.inserted_id) 
+
+    return jsonify(job), 201
