@@ -1,16 +1,12 @@
-import { useContext } from 'react';
 import { createBrowserRouter, RouterProvider, Navigate, Outlet } from "react-router-dom";
 import Root from "./pages/Root";
 import LoginPage from "./pages/LoginPage";
 import SignUpPage from "./pages/SignUpPage";
 import ForgotPasswordPage from "./pages/ForgotPasswordPage";
 import MainPage from "./pages/MainPage";
-import { UserProvider, UserContext } from "./context/userContext";
-
-const ProtectedRoute = () => {
-  const { userToken } = useContext(UserContext);
-  return userToken ? <Outlet /> : <Navigate to="/login" replace />;
-};
+import { UserProvider } from "./context/userContext";
+import { JobProvider } from "./context/jobContext";
+import ProtectedRoute from "./components/ProtectedRoute";
 
 const router = createBrowserRouter([
   {
@@ -31,13 +27,7 @@ const router = createBrowserRouter([
       },
       {
         path: "main", 
-        element: <ProtectedRoute />,
-        children: [
-          {
-            index: true,
-            element: <MainPage />,
-          },
-        ],
+        element: <ProtectedRoute><MainPage /></ProtectedRoute>,
       },
       {
         index: true,
@@ -50,7 +40,9 @@ const router = createBrowserRouter([
 function App() {
   return (
     <UserProvider>
-      <RouterProvider router={router} />
+      <JobProvider>
+        <RouterProvider router={router} />
+      </JobProvider>
     </UserProvider>
   );
 }
