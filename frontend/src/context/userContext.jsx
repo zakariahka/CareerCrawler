@@ -1,4 +1,4 @@
-import React, { createContext, useState } from "react";
+import React, { createContext, useState, useEffect } from "react";
 import axios from "axios";
 
 export const UserContext = createContext();
@@ -6,6 +6,7 @@ export const UserContext = createContext();
 export const UserProvider = ({ children }) => {
   const [userData, setUserData] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [userToken, setUserToken] = useState(localStorage.getItem("userData") || null);
   const API_URL = process.env.REACT_APP_API_URL;
 
   const axiosInstance = axios.create({
@@ -34,9 +35,10 @@ export const UserProvider = ({ children }) => {
           'Content-Type': 'application/json',
         },
       });
-      if (response.status === 200) {
+      if (response.status === 200 && response.data.token) {
         setUserData(response.data.user);
-        console.log('Login successful:', response.data);
+        setUserToken(response.data.token);
+        localStorage.setItem("userData", response.data.token);
         return response.data;
       }
     } catch (error) {
@@ -45,9 +47,16 @@ export const UserProvider = ({ children }) => {
     }
   };
 
+  useEffect(() => {
+    const token = localStorage.getItem("userData");
+    if (token) {
+      setUserToken(token);
+    }
+  }, []);
+
   return (
     <UserContext.Provider
-      value={{ signup, login, isLoading, userData }}
+      value={{ signup, login, isLoading, userData, userToken }}
     >
       {children}
     </UserContext.Provider>

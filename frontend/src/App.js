@@ -5,7 +5,7 @@ import LoginPage from "./pages/LoginPage";
 import SignUpPage from "./pages/SignUpPage";
 import ForgotPasswordPage from "./pages/ForgotPasswordPage";
 import MainPage from "./pages/MainPage";
-import { UserContext, UserProvider } from "./context/userContext";
+import { UserProvider, UserContext } from "./context/userContext";
 
 const ProtectedRoute = () => {
   const { userToken } = useContext(UserContext);
