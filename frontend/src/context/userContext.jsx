@@ -6,7 +6,7 @@ export const UserContext = createContext();
 export const UserProvider = ({ children }) => {
   const [userData, setUserData] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
-  const [userToken, setUserToken] = useState(localStorage.getItem("userData") || null);
+  const [userToken, setUserToken] = useState(localStorage.getItem("userToken") || null);
   const API_URL = process.env.REACT_APP_API_URL;
 
   const axiosInstance = axios.create({
@@ -38,7 +38,7 @@ export const UserProvider = ({ children }) => {
       if (response.status === 200 && response.data.token) {
         setUserData(response.data.user);
         setUserToken(response.data.token);
-        localStorage.setItem("userData", response.data.token);
+        localStorage.setItem("userToken", response.data.token);
         return response.data;
       }
     } catch (error) {
@@ -48,7 +48,7 @@ export const UserProvider = ({ children }) => {
   };
 
   useEffect(() => {
-    const token = localStorage.getItem("userData");
+    const token = localStorage.getItem("userToken");
     if (token) {
       setUserToken(token);
     }

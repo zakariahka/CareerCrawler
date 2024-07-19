@@ -21,6 +21,8 @@ def create_app():
     app.config['JWT_SECRET_KEY'] = app.config.get('SECRET_KEY')
     
     from .blueprints.user import user_bp
+    from .blueprints.job import job_bp
     app.register_blueprint(user_bp, url_prefix='/user')
+    app.register_blueprint(user_bp, url_prefix='/job')
     
     return app
