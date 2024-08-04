@@ -1,8 +1,7 @@
 from flask import Blueprint, jsonify, request, current_app
 from flask_jwt_extended import jwt_required
 from bson import ObjectId
-
-job_bp = Blueprint('job', __name__)
+from . import job_bp
 
 @job_bp.route('/jobs', methods=['GET'])
 @jwt_required()

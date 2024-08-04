@@ -1,4 +1,4 @@
-from flask import Blueprint, jsonify, request, current_app
+from flask import jsonify, request, current_app
 from email_validator import validate_email, EmailNotValidError
 from flask_jwt_extended import create_access_token
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -39,8 +39,9 @@ def signup():
             'userName': userName, 'phoneNumber': phoneNumber}
     inserted_user = current_app.db.users.insert_one(user)
 
-    access_token = create_access_token(identity=str(inserted_user.inserted_id))
+    access_token = create_access_token(identity=str(inserted_user.inserted_id), expires_delta=timedelta(hours=1))
     return jsonify({"user": user, "token": access_token, 'status': 200})
+
 
 @user_bp.route('/login', methods=['POST'])
 def login():
@@ -61,8 +62,9 @@ def login():
     if not check_password_hash(user['password'], password):
         return jsonify({'error': 'Invalid password', 'status': 402})
     
-    access_token = create_access_token(identity=str(user['_id']))
+    access_token = create_access_token(identity=str(user['_id']), expires_delta=timedelta(hours=1))
     return jsonify({'user': user, 'token': access_token, 'status': 200})
+
 
 @user_bp.route('/get_user')
 def get_user():

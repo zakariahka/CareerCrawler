@@ -23,6 +23,6 @@ def create_app():
     from .blueprints.user import user_bp
     from .blueprints.job import job_bp
     app.register_blueprint(user_bp, url_prefix='/user')
-    app.register_blueprint(user_bp, url_prefix='/job')
+    app.register_blueprint(job_bp, url_prefix='/job')
     
     return app

@@ -1,4 +1,4 @@
-import { createBrowserRouter, RouterProvider, Navigate, Outlet } from "react-router-dom";
+import { createBrowserRouter, RouterProvider, Navigate } from "react-router-dom";
 import Root from "./pages/Root";
 import LoginPage from "./pages/LoginPage";
 import SignUpPage from "./pages/SignUpPage";
@@ -31,7 +31,7 @@ const router = createBrowserRouter([
       },
       {
         index: true,
-        element: <Navigate to="main" replace />,
+        element: <Navigate to="login" replace />,
       },
     ],
   },
