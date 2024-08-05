@@ -38,7 +38,6 @@ export const UserProvider = ({ children }) => {
       if (response.status === 200 && response.data) {
         setUserData(response.data.user);
         setUserToken(response.data.token);
-        console.log(response.data.user)
         localStorage.setItem("userData", JSON.stringify(response.data.user));
         localStorage.setItem("userToken", response.data.token);
         return response.data;

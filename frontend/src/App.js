@@ -6,7 +6,7 @@ import ForgotPasswordPage from "./pages/ForgotPasswordPage";
 import MainPage from "./pages/MainPage";
 import { UserProvider } from "./context/userContext";
 import { JobProvider } from "./context/jobContext";
-import ProtectedRoute from "./components/ProtectedRoute";
+import ProtectedRoutes from "./components/ProtectedRoutes";
 
 const router = createBrowserRouter([
   {
@@ -26,12 +26,14 @@ const router = createBrowserRouter([
         element: <ForgotPasswordPage />,
       },
       {
-        path: "main", 
-        element: <ProtectedRoute><MainPage /></ProtectedRoute>,
-      },
-      {
-        index: true,
-        element: <Navigate to="login" replace />,
+        element: <ProtectedRoutes />,
+        children: [
+          {
+            path: "main",
+            element: <MainPage />,
+          },
+         
+        ],
       },
     ],
   },
