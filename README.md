@@ -3,7 +3,7 @@ Hopefully will be finished soon :)
 
 # Job Listings Aggregator Bot
 
-A web-based platform that scrapes job listings from multiple job websites like Indeed and Glassdoor and aggregates the data into a searchable and filterable platform for users.
+A web-based platform that scrapes job listings from Craigslist (Indeed and Glassdoor coming soon!) and aggregates the data into a searchable and filterable platform for users.
 
 ## Features
 

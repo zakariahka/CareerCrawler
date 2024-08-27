@@ -14,6 +14,7 @@ export default function RegisterPage() {
     confirmedPassword: "",
   });
   const [passwordsMatch, setPasswordsMatch] = useState(true);
+  const [error, setError] = useState("");
 
   useEffect(() => {
     setPasswordsMatch(user.password === user.confirmedPassword || user.confirmedPassword.length === 0);
@@ -34,33 +35,39 @@ export default function RegisterPage() {
   
       try {
         const data = await signup(userData);
-        if(data.status === 200){
-          navigate("/login")
-          console.log(data)
-        }
-        else{
+        if (data.status === 200) {
+          navigate("/login");
+          console.log(data);
+        } else {
+          switch (data.status) {
+            case 400:
+              setError(data.error || "User already exists or request body is not valid.");
+              break;
+            case 401:
+              setError("Email or password is missing.");
+              break;
+            case 402:
+              setError(data.error || "Invalid email format.");
+              break;
+            default:
+              setError("An unknown error occurred.");
+              break;
+          }
           console.log("Signup failed:", data);
         }
-        setUser({
-          email: "",
-          password: "",
-          userName: "",
-          phoneNumber: "",
-          confirmedPassword: "",
-        });
       } catch (error) {
         console.error("Signup Error:", error);
+        setError("Signup failed. Please try again.");
       }
     } else {
-      console.error("Passwords do not match.");
+      setError("Passwords do not match.");
     }
   }
-  
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-light-pink-orange">
       <div className="p-14 bg-white rounded-lg shadow-xl space-y-6 max-w-2xl w-full mx-4">
-      <label
+        <label
           htmlFor="userName"
           className="block text-sm font-semibold text-words-pink-orange"
         >
@@ -89,7 +96,7 @@ export default function RegisterPage() {
           onChange={onHandleChange}
         />
         <label
-          htmlFor="email"
+          htmlFor="phoneNumber"
           className="block text-sm font-semibold text-words-pink-orange"
         >
           Enter your phone number
@@ -131,6 +138,7 @@ export default function RegisterPage() {
           onChange={onHandleChange}
         />
         {(!passwordsMatch && user.confirmedPassword.length > 0) && <p className="text-red-700">Passwords must match</p>}
+        {error && <p className="text-red-700">{error}</p>}
         <button
           type="submit"
           className="bg-pink-orange hover:bg-dark-pink-orange text-white font-bold py-2 px-4 rounded-lg w-full"
