@@ -40,6 +40,7 @@ export const UserProvider = ({ children }) => {
         setUserToken(response.data.token);
         localStorage.setItem("userData", JSON.stringify(response.data.user));
         localStorage.setItem("userToken", response.data.token);
+        console.log(response.data.token)
         return response.data;
       }
     } catch (error) {
