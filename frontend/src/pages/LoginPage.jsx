@@ -1,21 +1,40 @@
 import { useState, useContext } from "react";
-import { Link, useNavigate} from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { UserContext } from "../context/userContext";
-
 
 export default function LoginPage() {
   const { login } = useContext(UserContext);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
   const navigate = useNavigate();
 
   const onHandleSubmit = async (event) => {
     event.preventDefault();
     try {
-      await login(email, password);
-      navigate('/main'); 
+      const data = await login(email, password);
+      if (data.status === 200) {
+        navigate('/main');
+      } else {
+        switch (data.status) {
+          case 400:
+            setError(data.error || "Request body must be in JSON format.");
+            break;
+          case 401:
+            setError("Email or password is missing.");
+            break;
+          case 402:
+            setError(data.error || "Invalid email or password.");
+            break;
+          default:
+            setError("An unknown error occurred.");
+            break;
+        }
+        console.log("Login failed:", data);
+      }
     } catch (error) {
-      console.log("Login failed", error);
+      console.error("Login Error:", error);
+      setError("Login failed. Please try again.");
     }
   };
 
@@ -60,6 +79,7 @@ export default function LoginPage() {
             </Link>
           </label>
         </div>
+        {error && <p className="text-red-700">{error}</p>}
         <form onSubmit={onHandleSubmit}>
           <button
             type="submit"
