@@ -2,8 +2,11 @@ import requests
 from bs4 import BeautifulSoup
 from flask import current_app
 
-def scrape_jobs():
-    url = 'https://newyork.craigslist.org/search/jjj?query=software+developer'
+def scrape_jobs(location: str, job: str):
+    job = job.split(',')
+    job = '+'.join(job)
+
+    url = f'https://{location}.craigslist.org/search/jjj?query={job}'
     response = requests.get(url)
     soup = BeautifulSoup(response.text, 'html.parser')
 
@@ -39,5 +42,3 @@ def store_scraped_jobs():
         if not db.jobs.find_one({'title': job['title'], 'location': job['location'], 'link': job['link']}):
             db.jobs.insert_one(job)
             print(f"Inserted Job: {job}")
-
-# Note: This is just for example purposes. Replace 'db.jobs' with your actual database collection.
