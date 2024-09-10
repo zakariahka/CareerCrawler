@@ -4,6 +4,7 @@ import pymongo
 from config import Config
 from flask_jwt_extended import JWTManager
 from flask_cors import CORS
+from datetime import timedelta
 
 def create_app():
     app = Flask(__name__)
@@ -19,6 +20,11 @@ def create_app():
     
     jwt = JWTManager(app)
     app.config['JWT_SECRET_KEY'] = app.config.get('SECRET_KEY')
+
+    # Configure JWT to use cookies
+    app.config['JWT_TOKEN_LOCATION'] = ['cookies']
+    app.config['JWT_COOKIE_CSRF_PROTECT'] = True
+    app.config['JWT_COOKIE_SECURE'] = False  # Set this to True when using HTTPS
     
     from .blueprints.user import user_bp
     from .blueprints.job import job_bp
@@ -26,3 +32,4 @@ def create_app():
     app.register_blueprint(job_bp, url_prefix='/job')
     
     return app
+
