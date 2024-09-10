@@ -21,10 +21,9 @@ def create_app():
     jwt = JWTManager(app)
     app.config['JWT_SECRET_KEY'] = app.config.get('SECRET_KEY')
 
-    # Configure JWT to use cookies
     app.config['JWT_TOKEN_LOCATION'] = ['cookies']
     app.config['JWT_COOKIE_CSRF_PROTECT'] = True
-    app.config['JWT_COOKIE_SECURE'] = False  # Set this to True when using HTTPS
+    app.config['JWT_COOKIE_SECURE'] = False 
     
     from .blueprints.user import user_bp
     from .blueprints.job import job_bp
