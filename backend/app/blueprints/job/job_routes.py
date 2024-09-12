@@ -11,12 +11,19 @@ def get_jobs():
     query = {}
 
     if location:
-        query['location'] = {'$regex': location, '$options': 'i'} 
+        query['location'] = {'$regex': location, '$options': 'i'}
 
     jobs = list(current_app.db.jobs.find(query))
+    
+    if not jobs:
+        store_scraped_jobs()
+        jobs = list(current_app.db.jobs.find(query))
+
     for job in jobs:
         job['_id'] = str(job['_id'])
+    
     return jsonify(jobs)
+
 
 
 @job_bp.route('/jobs/<job_id>', methods=['GET'])

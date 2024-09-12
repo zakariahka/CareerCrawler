@@ -16,17 +16,17 @@ export const JobProvider = ({ children }) => {
 
   const fetchJobs = async (location = '') => {
     try {
-      const token = localStorage.getItem('userToken'); 
+      const token = localStorage.getItem('userToken');
       if (!token) {
         throw new Error('No token found, user is not authenticated');
       }
-
+  
       const response = await axiosInstance.get(`/job/jobs`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
         params: {
-          location: location,
+          location: location, 
         }
       });
       setJobs(response.data);
@@ -36,6 +36,7 @@ export const JobProvider = ({ children }) => {
       setIsLoading(false);
     }
   };
+  
 
   
 
