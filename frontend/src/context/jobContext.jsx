@@ -14,14 +14,19 @@ export const JobProvider = ({ children }) => {
     withCredentials: true, 
   });
 
-  const fetchJobs = async () => {
+  const fetchJobs = async (location = '') => {
     try {
-      const response = await axiosInstance.get('/job/jobs', {
+      const token = localStorage.getItem('userToken'); // Get the JWT token from localStorage
+      if (!token) {
+        throw new Error('No token found, user is not authenticated');
+      }
+
+      const response = await axiosInstance.get(`/job/jobs`, {
         headers: {
-          Authorization: `Bearer ${localStorage.getItem('userToken')}`
+          Authorization: `Bearer ${token}`,  // Ensure the Authorization header is sent
         },
         params: {
-          location: location 
+          location: location,  // Pass location as a query parameter
         }
       });
       setJobs(response.data);
@@ -31,6 +36,8 @@ export const JobProvider = ({ children }) => {
       setIsLoading(false);
     }
   };
+
+  
 
   useEffect(() => {
     fetchJobs();

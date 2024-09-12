@@ -4,14 +4,14 @@ import { JobContext } from '../context/jobContext';
 
 const MainPage = () => {
   const { userData, logout } = useContext(UserContext);
-  const { jobs, isLoading } = useContext(JobContext);
+  const { jobs, isLoading, setLocation } = useContext(JobContext);  
   const [searchTerm, setSearchTerm] = useState('');
+  const [locationInput, setLocationInput] = useState('');  // Track input for location search
 
-  const filteredJobs = jobs.filter(job =>
-    job.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    job.company.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    job.location.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  // Function to handle clicking the "Enter" button for location search
+  const handleLocationSearch = () => {
+    setLocation(locationInput);  // Update location in JobContext to trigger new API call
+  };
 
   return (
     <div className="flex flex-col items-center min-h-screen bg-light-pink-orange">
@@ -39,11 +39,24 @@ const MainPage = () => {
             onChange={(e) => setSearchTerm(e.target.value)}
             className="border-2 border-light-pink-orange bg-gray-50 h-10 px-5 rounded-lg text-sm w-full mb-4"
           />
+          <input
+            type="text"
+            placeholder="Search by location..."
+            value={locationInput}
+            onChange={(e) => setLocationInput(e.target.value)}  // Update input state
+            className="border-2 border-light-pink-orange bg-gray-50 h-10 px-5 rounded-lg text-sm w-full mb-4"
+          />
+          <button
+            onClick={handleLocationSearch}  // Handle button click
+            className="bg-pink-orange hover:bg-dark-pink-orange text-white font-bold py-2 px-4 rounded-lg"
+          >
+            Enter
+          </button>
           {isLoading ? (
             <p className="text-center text-words-pink-orange">Loading...</p>
           ) : (
             <ul className="space-y-4">
-              {filteredJobs.map((job) => (
+              {jobs.map((job) => (
                 <li key={job._id} className="bg-gray-50 p-4 rounded-lg shadow-md">
                   <a href={job.link} target="_blank" rel="noopener noreferrer" className="text-lg font-semibold text-pink-orange hover:text-dark-pink-orange">
                     {job.title} - {job.company} ({job.location})
