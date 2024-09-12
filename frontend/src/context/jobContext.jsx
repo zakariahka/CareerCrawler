@@ -16,17 +16,17 @@ export const JobProvider = ({ children }) => {
 
   const fetchJobs = async (location = '') => {
     try {
-      const token = localStorage.getItem('userToken'); // Get the JWT token from localStorage
+      const token = localStorage.getItem('userToken'); 
       if (!token) {
         throw new Error('No token found, user is not authenticated');
       }
 
       const response = await axiosInstance.get(`/job/jobs`, {
         headers: {
-          Authorization: `Bearer ${token}`,  // Ensure the Authorization header is sent
+          Authorization: `Bearer ${token}`,
         },
         params: {
-          location: location,  // Pass location as a query parameter
+          location: location,
         }
       });
       setJobs(response.data);

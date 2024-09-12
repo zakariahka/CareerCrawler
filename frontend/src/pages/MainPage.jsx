@@ -6,11 +6,10 @@ const MainPage = () => {
   const { userData, logout } = useContext(UserContext);
   const { jobs, isLoading, setLocation } = useContext(JobContext);  
   const [searchTerm, setSearchTerm] = useState('');
-  const [locationInput, setLocationInput] = useState('');  // Track input for location search
-
-  // Function to handle clicking the "Enter" button for location search
+  const [locationInput, setLocationInput] = useState(''); 
+  
   const handleLocationSearch = () => {
-    setLocation(locationInput);  // Update location in JobContext to trigger new API call
+    setLocation(locationInput);
   };
 
   return (
@@ -43,11 +42,11 @@ const MainPage = () => {
             type="text"
             placeholder="Search by location..."
             value={locationInput}
-            onChange={(e) => setLocationInput(e.target.value)}  // Update input state
+            onChange={(e) => setLocationInput(e.target.value)}
             className="border-2 border-light-pink-orange bg-gray-50 h-10 px-5 rounded-lg text-sm w-full mb-4"
           />
           <button
-            onClick={handleLocationSearch}  // Handle button click
+            onClick={handleLocationSearch}
             className="bg-pink-orange hover:bg-dark-pink-orange text-white font-bold py-2 px-4 rounded-lg"
           >
             Enter

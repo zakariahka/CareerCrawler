@@ -11,7 +11,6 @@ export const UserProvider = ({ children }) => {
 
   const axiosInstance = axios.create({
     baseURL: API_URL,
-    withCredentials: true, 
   });
 
   const signup = async (userData) => {
