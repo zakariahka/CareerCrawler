@@ -7,10 +7,17 @@ from .scraper import store_scraped_jobs
 @job_bp.route('/jobs', methods=['GET'])
 @jwt_required()
 def get_jobs():
-    jobs = list(current_app.db.jobs.find())
+    location = request.args.get('location')  # Get the location query parameter if present
+    query = {}
+
+    if location:
+        query['location'] = {'$regex': location, '$options': 'i'}  # Case-insensitive search
+
+    jobs = list(current_app.db.jobs.find(query))
     for job in jobs:
         job['_id'] = str(job['_id'])
     return jsonify(jobs)
+
 
 @job_bp.route('/jobs/<job_id>', methods=['GET'])
 @jwt_required()
