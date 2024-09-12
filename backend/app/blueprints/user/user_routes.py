@@ -1,9 +1,8 @@
-from flask import jsonify, request, current_app
+from flask import jsonify, request, current_app, make_response
 from email_validator import validate_email, EmailNotValidError
-from flask_jwt_extended import create_access_token
+from flask_jwt_extended import create_access_token, set_access_cookies, jwt_required, get_jwt_identity
 from werkzeug.security import generate_password_hash, check_password_hash
 from . import user_bp
-
 
 @user_bp.route('/')
 def index():
@@ -35,12 +34,16 @@ def signup():
         return jsonify({'error': 'User already exists', 'status': 400})
 
     hashed_password = generate_password_hash(password)
-    user = {'_id': email, 'email': email, 'password': hashed_password,
-            'userName': userName, 'phoneNumber': phoneNumber}
+    user = {
+        '_id': email,
+        'email': email,
+        'password': hashed_password,
+        'userName': userName,
+        'phoneNumber': phoneNumber
+    }
     current_app.db.users.insert_one(user)
 
     return jsonify({"user": user, 'status': 200})
-
 
 @user_bp.route('/login', methods=['POST'])
 def login():
@@ -57,21 +60,22 @@ def login():
     user = current_app.db.users.find_one({'email': email})
     if not user:
         return jsonify({'error': 'A user with that email doesn\'t exist', 'status': 402})
-    
+
     if not check_password_hash(user['password'], password):
         return jsonify({'error': 'Invalid password', 'status': 402})
-    
+
     access_token = create_access_token(identity=str(user['_id']))
-    return jsonify({'user': user, 'token': access_token, 'status': 200})
 
+    # Manually set the cookie without HttpOnly
+    response = make_response(jsonify({'user': user, 'status': 200}))
+    response.set_cookie(
+        'access_token_cookie', 
+        value=access_token, 
+        max_age=24 * 3600,
+        path='/', 
+        secure=False,
+        httponly=False,
+        samesite='None'
+    )
 
-@user_bp.route('/get_user')
-def get_user():
-    email = request.args.get('email')
-    user = current_app.db.users.find_one({'email': email})
-
-    if not user:
-        return jsonify({'error': 'User doesnt exist', 'status': 400})
-    
-    user['_id'] = str(user['_id'])
-    return jsonify({'user': user, 'status': 200})
+    return response
