@@ -11,8 +11,7 @@ export const UserProvider = ({ children }) => {
   const API_URL = process.env.REACT_APP_API_URL;
   
   const axiosInstance = axios.create({
-    baseURL: API_URL,
-    withCredentials: true, // Ensure cookies are sent with the request
+    baseURL: API_URL
   });
 
   const login = async (email, password) => {

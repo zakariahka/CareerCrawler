@@ -7,30 +7,24 @@ from .scraper import store_scraped_jobs
 @job_bp.route('/jobs', methods=['GET'])
 @jwt_required()
 def get_jobs():
-    jobs = list(current_app.db.jobs.find())
+    location = request.args.get('location')
+    query = {}
+
+    if location:
+        query['location'] = {'$regex': location, '$options': 'i'}
+
+    jobs = list(current_app.db.jobs.find(query))
+    
+    if not jobs:
+        store_scraped_jobs()
+        jobs = list(current_app.db.jobs.find(query))
+
     for job in jobs:
         job['_id'] = str(job['_id'])
+    
     return jsonify(jobs)
 
-@job_bp.route('/create_job', methods=['POST'])
-@jwt_required()
-def create_job():
-    data = request.get_json()
-    if not data:
-        return jsonify({'error': 'Request body must be JSON'}), 400
 
-    job = {
-        'title': data.get('title'),
-        'company': data.get('company'),
-        'location': data.get('location'),
-        'description': data.get('description'),
-        'link': data.get('link')
-    }
-
-    result = current_app.db.jobs.insert_one(job)
-    job['_id'] = str(result.inserted_id) 
-
-    return jsonify(job), 201
 
 @job_bp.route('/jobs/<job_id>', methods=['GET'])
 @jwt_required()
