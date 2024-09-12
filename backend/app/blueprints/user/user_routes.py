@@ -66,38 +66,16 @@ def login():
 
     access_token = create_access_token(identity=str(user['_id']))
 
+    # Manually set the cookie without HttpOnly
     response = make_response(jsonify({'user': user, 'status': 200}))
-    set_access_cookies(response, access_token)  
+    response.set_cookie(
+        'access_token_cookie', 
+        value=access_token, 
+        max_age=24 * 3600,  # Expiration time of 24 hours
+        path='/', 
+        secure=False,  # Ensure this is False in development (HTTP)
+        httponly=False,  # This disables HttpOnly so the cookie is accessible via JavaScript
+        samesite='None'
+    )
 
-    return response
-
-@user_bp.route('/get_user')
-def get_user():
-    email = request.args.get('email')
-    user = current_app.db.users.find_one({'email': email})
-
-    if not user:
-        return jsonify({'error': 'User doesn\'t exist', 'status': 400})
-
-    user['_id'] = str(user['_id'])
-    return jsonify({'user': user, 'status': 200})
-
-@user_bp.route('/verify', methods=['GET'])
-@jwt_required()  
-def verify():
-    user_id = get_jwt_identity() 
-    user = current_app.db.users.find_one({'_id': user_id}, {'_id': 0}) 
-
-    if user:
-        return jsonify({'user': user, 'status': 200})
-    else:
-        return jsonify({'error': 'User not found', 'status': 404})
-
-
-
-@user_bp.route('/logout', methods=['POST'])
-@jwt_required() 
-def logout():
-    response = make_response(jsonify({'message': 'Logout successful', 'status': 200}))
-    response.delete_cookie('access_token_cookie')
     return response
