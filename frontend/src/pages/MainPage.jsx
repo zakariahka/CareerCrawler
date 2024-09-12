@@ -4,7 +4,7 @@ import { JobContext } from '../context/jobContext';
 
 const MainPage = () => {
   const { userData, logout } = useContext(UserContext);
-  const { jobs, isLoading } = useContext(JobContext); // No need to pull createJob here anymore
+  const { jobs, isLoading } = useContext(JobContext);
   const [searchTerm, setSearchTerm] = useState('');
 
   const filteredJobs = jobs.filter(job =>
