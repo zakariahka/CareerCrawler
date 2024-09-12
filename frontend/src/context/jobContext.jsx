@@ -6,6 +6,7 @@ export const JobContext = createContext();
 export const JobProvider = ({ children }) => {
   const [jobs, setJobs] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [location, setLocation] = useState('');
   const API_URL = process.env.REACT_APP_API_URL;
 
   const axiosInstance = axios.create({
@@ -18,6 +19,9 @@ export const JobProvider = ({ children }) => {
       const response = await axiosInstance.get('/job/jobs', {
         headers: {
           Authorization: `Bearer ${localStorage.getItem('userToken')}`
+        },
+        params: {
+          location: location 
         }
       });
       setJobs(response.data);
@@ -28,25 +32,12 @@ export const JobProvider = ({ children }) => {
     }
   };
 
-  const createJob = async (newJob) => {
-    try {
-      const response = await axiosInstance.post('/job/jobs', newJob, {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem('token')}`
-        }
-      });
-      setJobs([...jobs, response.data]);
-    } catch (error) {
-      console.error("Failed to create job", error);
-    }
-  };
-
   useEffect(() => {
     fetchJobs();
-  }, []);
+  }, [location]);
 
   return (
-    <JobContext.Provider value={{ jobs, isLoading, createJob }}>
+    <JobContext.Provider value={{ jobs, isLoading, setLocation }}>
       {children}
     </JobContext.Provider>
   );
