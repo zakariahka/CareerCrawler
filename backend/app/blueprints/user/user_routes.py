@@ -71,10 +71,10 @@ def login():
     response.set_cookie(
         'access_token_cookie', 
         value=access_token, 
-        max_age=24 * 3600,  # Expiration time of 24 hours
+        max_age=24 * 3600,
         path='/', 
-        secure=False,  # Ensure this is False in development (HTTP)
-        httponly=False,  # This disables HttpOnly so the cookie is accessible via JavaScript
+        secure=False,
+        httponly=False,
         samesite='None'
     )
 
